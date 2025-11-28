@@ -1,5 +1,5 @@
 
--- MPD--
+-- EXO 1 --
 -- Création de la base de données "Garage" --
 
 CREATE DATABASE IF NOT EXISTS `GARAGE`;
@@ -26,6 +26,8 @@ PRIMARY KEY(`v_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 ALTER TABLE `g_voiture` ADD CONSTRAINT `article_fk` FOREIGN KEY (`v_fk_article_id`) REFERENCES `g_article`(`a_id`);
+
+-- EXO 2 --
 
 ALTER TABLE `g_voiture` 
 ADD `v_annee` INT NOT NULL,
@@ -59,3 +61,24 @@ FOREIGN KEY (`o_fk_client_id`) REFERENCES `g_client`(`c_id`)
 
 ALTER TABLE `g_ordre` 
 ADD `o_montant` FLOAT NOT NULL;
+
+-- EXO 3 --
+
+ALTER TABLE `g_article`
+ADD COLUMN `a_prix_unitaire` DECIMAL(10,2) NOT NULL DEFAULT 0.00;
+
+ALTER TABLE `g_ordre`
+ADD COLUMN `o_taux_horaire` DECIMAL(8,2) NOT NULL DEFAULT 75.00;
+
+CREATE TABLE IF NOT EXISTS `G_FACTURE` (
+    f_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    f_numero VARCHAR(20) UNIQUE NOT NULL,    
+    f_montant_main_oeuvre DECIMAL(10,2) NOT NULL,    
+    f_quantite_utilisee INT NOT NULL DEFAULT 1,
+    f_prix_unitaire DECIMAL(10,2) NOT NULL,    
+    f_montant_total DECIMAL(10,2) NOT NULL,
+	f_fk_article_id INT NULL,	
+    f_fk_ordre_id INT NOT NULL UNIQUE, 
+    FOREIGN KEY (`f_fk_ordre_id`) REFERENCES `ordre`(`o_id`),
+    FOREIGN KEY (`f_fk_article_id`) REFERENCES `g_article`(`a_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
